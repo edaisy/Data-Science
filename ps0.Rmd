@@ -144,18 +144,25 @@ ggplot(data = star_data, mapping = aes(x = x, y = y)) +
 
 Calculate the correlation coefficient between `x` vs. `y` for the `circle` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficients from the other two datasets?
 
-> RESPONSE: 
+> RESPONSE: This correlation coefficient is also very similar to those calculated for the other two datasets.
 
 ```{r}
+# Start with the `datasaurus_dozen` and pipe it into the `filter` function to filter for observations where `dataset == "dino"`. Store the resulting filtered data frame as a new data frame called `dino_data`.
+circ_data <- datasaurus_dozen %>%
+  filter(dataset == "circle")
 
+# Calculate a summary statistic that we call `r` equal to the correlation coefficient between `x` and `y` for the `dino` dataset 
+circ_data %>%
+  summarize(r = cor(x, y))
 ```
 
 Then, plot `y` versus `x` for the `circle` dataset.  Does the plot look the same as either plot from the other two datasets?
 
-> RESPONSE:
+> RESPONSE: It doesn't! It looks like an ellipse with a few extra points, or something.
 
 ```{r}
-
+ggplot(data = circ_data, mapping = aes(x = x, y = y)) +
+  geom_point()
 ```
 
 *You should pause again, commit changes with the commit message "Added answer for Ex 4", and push.*
