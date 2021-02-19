@@ -191,7 +191,7 @@ datasaurus_dozen %>%
 
 What do you notice?  Is the correlation coefficiant an appropriate summary for any of these datasets?  Why or why not?
 
-> RESPONSE:
+> RESPONSE: Although all of the correlation coefficients are about the same, the graphs look completely different. This indicates to me that the correlation coefficient is not a good summary of these datasets (because they're not linear).
 
 
 *You should pause again, commit changes with the commit message "Added answer for Ex 5", and push.*
