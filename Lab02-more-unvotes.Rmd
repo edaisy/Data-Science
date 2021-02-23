@@ -1,6 +1,6 @@
 ---
 title: "UN Votes (Round 2)"
-author: ''
+author: 'Evan Daisy'
 date: "February 23, 2021"
 always_allow_html: yes
 output:
@@ -82,11 +82,28 @@ ggplot(data = un_votes_hr
 The default symbol for `geom_point` is, well, a point.  But you can change the symbol shape and size using the `shape = ` and `size =` options, respectively, within the `geom_point` function.  
 
 - Try adding `shape = 2` to the geom_point() function.  What happens?    
+
+The points are graphed as triangles!
+
 - What happens if you add `shape = "*", size = 5`?  
+
+The points are graphed as stars!
+
 - You can also specify different shapes for the different countries.  Since country is a variable in our dataset, we can use the `aes` function within `geom_point` to specify different shapes for different countries.  See if you can figure out the correct syntax to do this.  Can you also figure out how to make the legend nicer? (Hint: add something to the `labs` function.)
 
 ```{r, fig.width=10}
-
+ggplot(data = un_votes_hr
+       , mapping = aes(x = year, y = percent_yes, color = country)) +
+    geom_point(aes(shape = country)) +
+    geom_smooth(method = "loess", se = FALSE) +
+    labs(
+      title = "Percentage of 'Yes' votes  on human rights issues in the UN General Assembly",
+      subtitle = "1946 to 2015",
+      y = "% Yes",
+      x = "Year",
+      color = "Country",
+      shape = "Country"
+    )
 ```
 
 *This is a good place to pause, commit changes with the commit message "Added answer for Ex 1", and push.*
