@@ -63,12 +63,12 @@ c. Critique and/or praise the visualization choices made by the designer.  Do th
 
 Explain why the following command does not color the data points blue, then write down the command that will turn the points blue.
 
-> ANSWER:
+> ANSWER: This command is claiming that mapping color to "blue" is an aesthetic, but it isn't because there are no variables involved. Color would instead simply be an attribute of the scatterplot and we would leave it outside of the aes() function, see fixed example below.
 
 ```{r}
 library(ggplot2)
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
 ```
 
 
@@ -77,10 +77,15 @@ ggplot(data = mpg) +
 
 Use the `MLB_teams` data in the `mdsr` package to create an informative data graphic that illustrates the relationship between winning percentage and payroll in context. What story does your graph tell?
 
-> ANSWER:
+> ANSWER: This graph tells that there is a weak positive association between win percentage and total payroll of a team in a given year.
 
 ```{r}
-
+help(MLB_teams)
+ggplot(data = MLB_teams) + 
+  geom_point(aes(x = payroll, y = WPct)) + geom_smooth(aes(x = payroll, y = WPct), method = "loess", se = FALSE) +
+  labs(title = "Win Percentage based on Total Payroll") + xlab("Sum of Player Salaries ($)") + ylab("Percentage of Games Won")
+MLB_teams %>%
+  summarize(r = cor(payroll, WPct))
 ```
 
 
