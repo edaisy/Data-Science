@@ -82,8 +82,10 @@ Use the `MLB_teams` data in the `mdsr` package to create an informative data gra
 ```{r}
 help(MLB_teams)
 ggplot(data = MLB_teams) + 
-  geom_point(aes(x = payroll, y = WPct)) + geom_smooth(aes(x = payroll, y = WPct), method = "loess", se = FALSE) +
-  labs(title = "Win Percentage based on Total Payroll") + xlab("Sum of Player Salaries ($)") + ylab("Percentage of Games Won")
+  geom_point(aes(x = payroll, y = WPct)) + 
+  geom_smooth(aes(x = payroll, y = WPct), method = "loess", se = FALSE) +
+  labs(title = "Win Percentage based on Total Payroll") + xlab("Sum of Player Salaries ($)") + 
+  ylab("Percentage of Games Won")
 MLB_teams %>%
   summarize(r = cor(payroll, WPct))
 ```
@@ -99,7 +101,10 @@ Note: be sure you load the `nasaweather` package and use the `storms` dataset fr
 ```{r}
 library(nasaweather)
 glimpse(storms)
-ggplot(data = storms) + geom_path(aes(x = long, y = lat, color = name)) + scale_color_discrete(guide="none") + facet_wrap(~year, nrow = 2)
+ggplot(data = storms) + geom_path(aes(x = long, y = lat, color = name)) + 
+  scale_color_discrete(guide="none") + facet_wrap(~year, nrow = 2) +
+  labs(title = "Tropical Storm Paths by Year") + xlab("Longitude") + 
+  ylab("Latitude")
 ```
 
 
@@ -114,6 +119,8 @@ For the calendar assignment:
 
 Note that you are not wed to the ideas you record here.  The visualizations and table can change before your final submission.  But, I want to make sure your plan aligns with your questions and that you're on the right track.
 
-> ANSWER:
+> ANSWER: I plan to focus on where I spend most of my time (my room, common room, science center, etc.), with whom I spend most of my time (alone, with friends), and on what classes I spend most of my time.
+I can imagine creating bar charts with each of these categorical variables on the x-axis and total amount of time on the y-axis to represent the overall distribution of how I spend my time. I would then facet by time of day (morning, afternoon, evening, night) to see how I spend time differently during different hours. For all of these charts I would map area of the bars to amount of time spent on a specific activity and color to each categorical variable. 
+I can imagine creating a table with time of day as rows (with bins morning, afternoon, evening, night), one of my categorical variables (where, with whom, on what class) as columns, and total time spent as entries.
 
  
