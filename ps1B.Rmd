@@ -97,7 +97,9 @@ Using data from the `nasaweather` package, use the `geom_path()` function to plo
 Note: be sure you load the `nasaweather` package and use the `storms` dataset from that package!
 
 ```{r}
-
+library(nasaweather)
+glimpse(storms)
+ggplot(data = storms) + geom_path(aes(x = long, y = lat, color = name)) + scale_color_discrete(guide="none") + facet_wrap(~year, nrow = 2)
 ```
 
 
