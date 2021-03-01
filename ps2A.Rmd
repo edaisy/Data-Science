@@ -30,6 +30,7 @@ Steps to proceed:
 ```{r, setup, include=FALSE}
 library(mdsr)   
 library(tidyverse)
+library(mosaic)
 
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -99,7 +100,7 @@ glimpse(babynames2)
 ### b. 
 Following the code presented in Section 5.2.4, create a dataset called `BabyNarrow` that summarizes the total number of people with each name (born between 2000 and 2017), grouped by sex. (Hint: follow the second code chunk on page 102, but don't filter on any particular names.)  Look at the dataset.  Why have we called this dataset "narrow"?
 
-> ANSWER: We have called this dataset narrow because there are fewer columns, each case is a name and gender, and we can easily add more variables if desired.
+> ANSWER: We have called this dataset narrow because there are fewer columns, each case is a name and sex, and we can easily add more variables if desired.
 
 ```{r}
 BabyNarrow <- babynames2 %>%
@@ -113,7 +114,7 @@ Now, following the code chunk presented on page 103*, put the data into a wide f
 
 * Note: you can use the `pivot_wider()` function instead of the `spread()` function if using the 2nd edition of the textbook (e.g., see [Section 6.2.2](https://mdsr-book.github.io/mdsr2e/ch-dataII.html#pivoting-wider) and [6.2.3](https://mdsr-book.github.io/mdsr2e/ch-dataII.html#pivoting-longer) in the 2nd edition).  I find `pivot_wider()` and `pivot_longer()` to be more intuitive than `spread()` and `gather()`.
 
-> ANSWER:
+> ANSWER: The three names with the largest ratio are Justice, Skyler, and Quinn, indicating that in this time period they could be considered the most "gender-neutral" names.
 
 ```{r}
 # this will bring up "Pivoting Introduction" vignette in your Help tab
@@ -134,9 +135,9 @@ Lastly, use the `gather()` function (or the `pivot_longer()` function) to put th
 > ANSWER: We now have fewer observations because between BabyNarrow and BabyNarrow2 we filtered out the names for which there weren't at least 10000 individuals of each gender.
 
 ```{r}
-BabyNarrow2 <- babyWide %>%
+BabyNarrow2 <- BabyWide %>%
   gather(key = sex, value = total, M, F) %>%
-  arrange(sex)
+  arrange(desc(ratio))
 glimpse(BabyNarrow2)
 ```
 
