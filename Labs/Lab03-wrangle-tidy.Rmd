@@ -140,7 +140,7 @@ HealthCare <- HealthCare %>%
   mutate("log(employer_coverage)" = log(employer_coverage)) %>%
   clean_names()
 health <- ggplot(data = HealthCare, aes(x = log_spending, y = log_employer_coverage))
-health + geom_point(aes(color = year)) + labs()
+health + geom_point(aes(color = year))
 ```
 
 
@@ -152,19 +152,36 @@ We see there is a strong relationship between log(spending) and log(coverage) wi
 
 What do you notice?
 
-> RESPONSE: 
+> RESPONSE: The relationship between population and employer coverage seems more linear than the relationship between population and healthcare spending.
 
 ```{r}
- 
+OurCoverage3 <- OurCoverage %>%
+  select(`2013__Total`, `2014__Total`, Location) %>%
+  rename('2013' = `2013__Total`) %>%
+  rename('2014' = `2014__Total`) %>%
+  gather(key = year, value = total_pop, '2013', '2014')
+HealthCare2 <- HealthCare %>%
+  inner_join(OurCoverage3, by = c("year" = "year", "location" = "Location"))
+health2 <- ggplot(data = HealthCare2, aes(x = total_pop, y = spending))
+health2 + geom_point(aes(color = year))
+health3 <- ggplot(data = HealthCare2, aes(x = total_pop, y = employer_coverage))
+health3 + geom_point(aes(color = year))
 ```
 
 
 Lastly, to account for total population, create a scatterplot of spending per capita versus proportion with employer coverage.  This time, *color by region* and *facet by year*.  The total spending column is reported in millions (1e6). Therefore, to calculate `spending_capita` we will need to adjust for this scaling factor to report it on the original scale (just dollars) and then divide by `tot_pop`.  Based on this figure, write a brief paragraph describing the relationship between health care spending and coverage in the US.
 
-> RESPONSE: 
+> RESPONSE: There is no significant relationship between health care spending and coverage in the United States
 
 ```{r}
-
+state_info <- state_info %>%
+  select(Location, Region)
+HealthCare3 <- HealthCare2 %>%
+  mutate(spending_capita = (spending*1e6) / total_pop) %>%
+  mutate(prop_employer_covered = employer_coverage/total_pop) %>%
+  inner_join(state_info, by = c("location" = "Location"))
+health4 <- ggplot(data = HealthCare3, aes(x = spending_capita, y = prop_employer_covered))
+health4 + geom_point(aes(color = Region)) + facet_wrap(~year)
 ```
 
 *This is a good place to pause, commit changes with the commit message "Added answer for Q1", and push.*
