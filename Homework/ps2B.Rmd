@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 
 # If you discussed this assignment with any of your peers, please list who here:
 
-> ANSWER:
+> ANSWER: Conrad Kuklinsky (Who turned his in before me)
 
 \newpage
 # MDSR Exercise 4.14 (modified)
@@ -92,13 +92,17 @@ ByZip <- ManViolations %>%
   group_by(zipcode) %>%
   summarise(medScore = median(score), frequency = n()) %>%
   mutate(log_frequency = log(frequency))
+ByBoth <- ManViolations %>%
+  group_by(zipcode, dba) %>%
+  summarise(medScore = median(score), frequency = n()) %>%
+  mutate(log_frequency = log(frequency)) %>%
+  mutate(log_medScore = log(medScore))
 g <- ggplot(data = ByZip, aes(x = log_frequency, y = medScore))
 g2 <- ggplot(data = ByPlace, aes(x = log_frequency, y = medScore))
-#g3 <- ggplot(data = ByZip, aes(x = frequency, y = medScore))
-#Trying some other plots that didn't display the data as well
-#g3 + geom_point()
+g3 <- ggplot(data = ByBoth, aes(x = log_frequency, y = medScore))
 g + geom_point() + labs(title = "Each Point is a Zip Code")
 g2 + geom_point() + labs(title = "Each Point is a Restaurant")
+g3 + geom_point() + labs(title = "Each Point is a Restaurant in a Certain Zip Code")
 ```
 
 b.  In your visualization in part (a), there should be at least a few points that stand out as outliers.  For *one of the outliers*, add text to the outlier identifying what business it is and an arrow pointing from the text to the observation.  First, you may want to `filter` to identify the name of the business (so you know what text to add to the plot).  
@@ -110,7 +114,13 @@ CrazyPlaces <- ByPlace %>%
   filter(medScore > 90)
 arrow <- data.frame(x1 = 6, y1 = 75, x2 = 3.4, y2 = 114)
 g2 <- ggplot(data = ByPlace, aes(x = log_frequency, y = medScore))
-g2 + geom_point() + labs(title = "Each Point is a Restaurant") + geom_curve(aes(x = x1, y = y1, xend = x2, yend = y2), data = arrow, arrow = arrow(length = unit(0.03, "npc"))) + annotate("text", x = 6, y = 72, label = "Roxy Diner")
+g2 + geom_point() + 
+  labs(title = "Each Point is a Restaurant") + 
+  geom_curve(aes(x = x1, y = y1, xend = x2, yend = y2), 
+             data = arrow, arrow = arrow(length = unit(0.03, "npc"))) + 
+  annotate("text", x = 6, y = 72, label = "Roxy Diner")
+#I chose to use the graph grouping by only dba rather than both dba and ZipCode 
+#because it left more space with which to label an outlier.
 ```
 
 
@@ -128,7 +138,26 @@ FakeDataLong <- data.frame(grp = c("A","A","B", "B")
                            , sdL = c(0.11, 0.33, 0.11, 0.31)
                            , meanR = c(0.34, 0.57, 0.40, 0.65)
                            , sdR = c(0.08, 0.33, 0.07, 0.27))
-
+head(FakeDataLong)
+FakeDataWide <- FakeDataLong %>%
+  pivot_longer(c(meanL, meanR, sdL, sdR), names_to = "measurements", values_to = "number") %>%
+  mutate(sex.measure = paste(sex,measurements, sep = ".")) %>%
+  select(-measurements, -sex) %>%
+  pivot_wider(names_from = sex.measure, values_from = number)
+  #spread(names_from = sex.measure, values_from = number)
+  #mutate(sex2 = sex) %>%
+  #spread(key = sex2, value = meanL)
+  #rename(F.meanL = F, M.meanL = M) %>%
+  #mutate(sex3 = sex) %>%
+  #spread(key = sex3, value = meanR) %>%
+  #rename(F.meanR = F, M.meanR = M) %>%
+  #mutate(sex4 = sex) %>%
+  #spread(key = sex4, value = sdL) %>%
+  #rename(F.sdL = F, M.sdL = M) %>%
+  #spread(key = sex, value = sdR) %>%
+  #rename(F.sdR = F, M.sdR = M)
+#Above is an earlier method I tried that almost worked, but I couldn't get rid of the NA's
+FakeDataWide
 ```
 
 \newpage
