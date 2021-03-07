@@ -6,7 +6,6 @@ output:
   pdf_document: default
   html_document:
     df_print: paged
-runtime: shiny
 ---
 
 In order to most effectively digest the Shiny video tutorial from RStudio -- and the new R commands it presents -- this series A homework assignment is designed to encourage you to watch the tutorial "actively" and in line with the textbook's Prop Tip of page 33:
