@@ -1,0 +1,13 @@
+name: Labs
+title: Labs
+username:
+account: edaisy21
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3761584
+bundleId: 4321483
+url: https://edaisy21.shinyapps.io/Labs/
+when: 1615304128.41063
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Lab02-more-unvotes.Rmd|Lab03-wrangle-tidy.Rmd|Q and A.Rmd
