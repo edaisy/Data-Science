@@ -39,7 +39,7 @@ knitr::opts_chunk$set(
 \newpage 
 # If you discussed this assignment with any of your peers, please list who here:
 
-> ANSWER:
+> ANSWER: Conrad Kuklinsky
 
 \newpage
 # Trump Tweets
@@ -119,9 +119,9 @@ iphone_words <- tweet_words %>%
   filter(source == "iPhone") %>%
   count(word, sort = TRUE)
 android_words %>%
-  with(wordcloud(words = word, freq = n, max.words=50))
+  with(wordcloud(words = word, freq = n, max.words=50, scale = c(6,1)))
 iphone_words %>%
-  with(wordcloud(words = word, freq = n, max.words=50))
+  with(wordcloud(words = word, freq = n, max.words=50, scale = c(6,1)))
 ```
 
 \newpage
@@ -129,19 +129,52 @@ iphone_words %>%
 
 How do the top used bigrams compare between the two sources?
 
-> ANSWER:  
+> ANSWER: Bigrams about political opponents ("crooked Hillary", "Ted Cruz", "Bernie Sanders", etc.) seem to come mostly from the Android, although Hillary makes quite an appearance in the iPhone tweets as well. Self-promotion in the form of versions of Trump's campaign slogan (trump2016 makeamericagreatagain) seem to come mostly from the iPhone
 
 ```{r}
 tweet_bigrams <- tweets2 %>%
-  unnest_tokens(output = bigram, input = text, token = "ngrams", n = 2)
-data(stop_words)
+  unnest_tokens(output = bigram, input = text, token = "ngrams", n = 2) %>%
+  separate(bigram, into = c("word", "word_2"), sep = " ", remove = FALSE) %>%
+  anti_join(stop_words, by = "word") %>%
+  filter(!(word %in% c("https", "t.co"))) %>%
+  separate(bigram, into = c("word_1", "word"), sep = " ", remove = FALSE) %>%
+  anti_join(stop_words, by = "word") %>%
+  filter(!(word %in% c("https", "t.co")))
+top_bigrams <- tweet_bigrams %>%
+  group_by(bigram, source) %>%
+  summarise(frequency = n()) %>%
+  arrange(desc(frequency)) %>%
+  group_by(source) %>%
+  slice(1:10) %>%
+  ungroup()
+#android_bigrams <- tweet_bigrams %>%
+  #filter(source == "Android") %>%
+  #group_by(bigram) %>%
+  #summarise(frequency = n()) %>%
+  #arrange(desc(frequency))
+#iphone_bigrams <- tweet_bigrams %>%
+  #filter(source == "iPhone") %>%
+  #group_by(bigram) %>%
+  #summarise(frequency = n()) %>%
+  #arrange(desc(frequency))
 ```
+
+```{r}
+ggplot(top_bigrams, aes(x = reorder(bigram, frequency), 
+                        y = frequency,
+                        fill = source)) + 
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "Frequency") +
+  facet_wrap(~source) +
+  coord_flip()
+```
+
 
 
 \newpage
 2c. Consider the sentiment.  Compute the proportion of words among the tweets within each source classified as "angry" and the proportion of words classified as "joy"  based on the NRC lexicon.  How does the proportion of "angry" and "joy" words compare between the two sources?  What about "positive" and "negative" words?  
 
-> ANSWER: Of the 539 Android words categorized by the NRC lexicon, about 20% of them were angry whereas about 14% of them were joyful. Of the 356 iPhone words categorized by the NRC lexicon, about 23% of them were angry whereas about 17% of them were joyful. 42% of the Android words were positive whereas 44% were negative, and 41% of the iPhone words were negative while 47% of them were negative.
+> ANSWER: Of the 539 Android words categorized by the NRC lexicon, about 20% of them were angry whereas about 14% of them were joyful. Of the 356 iPhone words categorized by the NRC lexicon, about 23% of them were angry whereas about 17% of them were joyful. 42% of the Android words were positive whereas 44% were negative, and 41% of the iPhone words were positive while 47% of them were negative.
 
 ```{r}
 nrc_lexicon <- get_sentiments("nrc")
@@ -174,5 +207,5 @@ iphone_moods <- iphone_words %>%
 \newpage
 2d. Lastly, based on your responses above, do you think there is evidence to support Robinson's claim that Trump only writes the (angrier) Android half of the tweets from realDonaldTrump?  In 2-4 sentences, please explain.
 
-> ANSWER: 
+> ANSWER: If we simply look at word and bigram frequencies, there is certainly evidence to support Robinson's claim. The most frequently used words and bigrams from the Android mostly involve "crooked" political opponents, whereas those from the iPhone are more self-promoting, with the most frequent bigram being Trump's campaign slogan. If we look at the sentiments however, the nrc lexicon actually attributes negative or angry sentiments to a greater proportion of iPhone words than Android words. Nonetheless, there are distinct differences in word and bigram usage that could suggest that a different person was tweeting from the Android than was tweeting from the iPhone.
 
